@@ -181,9 +181,15 @@ class RemoveFriendView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         friend_id = kwargs['pk']
         friend = get_object_or_404(User, id=friend_id)
-        request.user.friends.filter(friend=friend).delete()
-        friend.friends.filter(friend=request.user).delete()
+        friendship = request.user.friends.filter(friend=friend, is_accepted=True)
+        if friendship.exists():
+            friendship.delete()
+            friend.friends.filter(friend=request.user).delete()
+            return Response(
+                {'success': 'Friend removed.'},
+                status=status.HTTP_200_OK
+            )
         return Response(
-            {'success': 'Friend removed.'},
-            status=status.HTTP_200_OK
+            {'error': 'Friend not found.'},
+            status=status.HTTP_404_NOT_FOUND
         )
