@@ -1,7 +1,7 @@
 # django_friends_service
 Django-сервис друзей
 
-
+## Документацию API можно посмотреть по [ссылке документации Swagger](https://app.swaggerhub.com/apis-docs/PROVOTOROVAALIN/friendship-api/v1)
 ## Запуск приложения:
 
 - Клонируйте репозиторий командой в терминале:
