@@ -57,7 +57,7 @@ class SendFriendRequestView(generics.CreateAPIView):
 
 class AcceptFriendRequestView(generics.UpdateAPIView):
     """
-    API endpoint для принятия/отклонения заявки в друзья.
+    API endpoint для принятия заявки в друзья.
     """
     serializer_class = FriendshipSerializer
     queryset = Friendship.objects.all()
@@ -85,7 +85,7 @@ class AcceptFriendRequestView(generics.UpdateAPIView):
 
 class RejectFriendRequestView(generics.DestroyAPIView):
     """
-    API endpoint для принятия/отклонения заявки в друзья.
+    API endpoint для отклонения заявки в друзья.
     """
     serializer_class = FriendshipSerializer
     queryset = Friendship.objects.all()
