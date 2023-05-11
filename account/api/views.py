@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import UserSerializer, FriendshipSerializer, FriendshipStatusSerializer
 from account.models import Friendship
@@ -12,7 +13,6 @@ class UserRegistrationView(generics.CreateAPIView):
     API endpoint для регистрации нового пользователя.
     """
     serializer_class = UserSerializer
-    permission_classes = []
 
 
 class SendFriendRequestView(generics.CreateAPIView):
@@ -20,6 +20,7 @@ class SendFriendRequestView(generics.CreateAPIView):
     API endpoint для отправки заявки в друзья другому пользователю.
     """
     serializer_class = FriendshipSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         friend_id = request.data.get('friend')
@@ -61,6 +62,7 @@ class AcceptFriendRequestView(generics.UpdateAPIView):
     """
     serializer_class = FriendshipSerializer
     queryset = Friendship.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def patch(self, request, *args, **kwargs):
         friend_id = kwargs['pk']
@@ -89,6 +91,7 @@ class RejectFriendRequestView(generics.DestroyAPIView):
     """
     serializer_class = FriendshipSerializer
     queryset = Friendship.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         friend_id = kwargs['pk']
@@ -110,6 +113,7 @@ class OutgoingFriendRequestsView(generics.ListAPIView):
     API endpoint для получения списка исходящих заявок в друзья пользователя.
     """
     serializer_class = FriendshipSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.request.user.friends.filter(is_accepted=False)
@@ -130,6 +134,7 @@ class FriendsListView(generics.ListAPIView):
     API endpoint для получения списка друзей пользователя.
     """
     serializer_class = FriendshipSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return self.request.user.friends.filter(is_accepted=True)
@@ -141,6 +146,7 @@ class FriendshipStatusView(generics.RetrieveAPIView):
     """
     serializer_class = FriendshipStatusSerializer
     queryset = Friendship.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         friend_id = self.kwargs.get('pk')
@@ -170,6 +176,7 @@ class RemoveFriendView(generics.DestroyAPIView):
     """
     serializer_class = FriendshipSerializer
     queryset = Friendship.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         friend_id = kwargs['pk']
